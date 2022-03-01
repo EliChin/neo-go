@@ -294,6 +294,8 @@ func (n *Notary) withdraw(ic *interop.Context, args []stackitem.Item) stackitem.
 		panic(fmt.Errorf("failed to get GAS contract state: %w", err))
 	}
 	transferArgs := []stackitem.Item{stackitem.NewByteArray(n.Hash.BytesBE()), stackitem.NewByteArray(to.BytesBE()), stackitem.NewBigInteger(deposit.Amount), stackitem.Null{}}
+	// TODO: https://github.com/neo-project/neo/pull/2661#discussion_r810245121
+	// resolved but not changed.
 	err = contract.CallFromNative(ic, n.Hash, cs, "transfer", transferArgs, true)
 	if err != nil {
 		panic(fmt.Errorf("failed to transfer GAS from Notary account: %w", err))
