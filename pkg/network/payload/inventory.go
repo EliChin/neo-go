@@ -36,8 +36,8 @@ func (i InventoryType) Valid(p2pSigExtensionsEnabled bool) bool {
 const (
 	TXType               InventoryType = 0x2b
 	BlockType            InventoryType = 0x2c
+	P2PNotaryRequestType InventoryType = 0x2d
 	ExtensibleType       InventoryType = 0x2e
-	P2PNotaryRequestType InventoryType = 0x50
 )
 
 // Inventory payload.
