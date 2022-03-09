@@ -89,6 +89,10 @@ func getDefaultClient(cfg config.OracleConfiguration) *http.Client {
 	// Override default CheckRedirect behaviour so that there's no restriction on the
 	// number of redirects (10 at max is allowed by default).
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		if len(via) > 0 && via[0].URL.Scheme == "https" && req.URL.Scheme != "https" {
+			lastHop := via[len(via)-1].URL
+			return fmt.Errorf("%w: redirected from secure URL %s to insecure URL %s", ErrRestrictedRedirect, lastHop, req.URL)
+		}
 		return nil
 	}
 	return &client
