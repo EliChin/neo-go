@@ -86,10 +86,9 @@ func getDefaultClient(cfg config.OracleConfiguration) *http.Client {
 		DialContext: d.DialContext,
 	}
 	client.Timeout = cfg.RequestTimeout
+	// Override default CheckRedirect behaviour so that there's no restriction on the
+	// number of redirects (10 at max is allowed by default).
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		if len(via) >= maxRedirections { // from https://github.com/neo-project/neo-modules/pull/694
-			return fmt.Errorf("%w: %d redirections are reached", ErrRestrictedRedirect, maxRedirections)
-		}
 		return nil
 	}
 	return &client
