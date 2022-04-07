@@ -33,48 +33,51 @@ which would yield the response:
 ```
 ### Supported methods
 
-| Method                   |
-|--------------------------|
-| `calculatenetworkfee`    |
-| `findstates`             |
-| `getapplicationlog`      |
-| `getbestblockhash`       |
-| `getblock`               |
-| `getblockcount`          |
-| `getblockhash`           |
-| `getblockheader`         |
-| `getblockheadercount`    |
-| `getblocksysfee`         |
-| `getcommittee`           |
-| `getconnectioncount`     |
-| `getcontractstate`       |
-| `getnativecontracts`     |
-| `getnep11balances`       |
-| `getnep11properties`     |
-| `getnep11transfers`      |
-| `getnep17balances`       |
-| `getnep17transfers`      |
-| `getnextblockvalidators` |
-| `getpeers`               |
-| `getproof`               |
-| `getrawmempool`          |
-| `getrawtransaction`      |
-| `getstate`               |
-| `getstateheight`         |
-| `getstateroot`           |
-| `getstorage`             |
-| `gettransactionheight`   |
-| `getunclaimedgas`        |
-| `getversion`             |
-| `invokecontractverify`   |
-| `invokefunction`         |
-| `invokescript`           |
-| `sendrawtransaction`     |
-| `submitblock`            |
-| `submitoracleresponse`   |
-| `submitnotaryrequest`    |
-| `validateaddress`        |
-| `verifyproof`            |
+| Method                         |
+|--------------------------------|
+| `calculatenetworkfee`          |
+| `findstates`                   |
+| `getapplicationlog`            |
+| `getbestblockhash`             |
+| `getblock`                     |
+| `getblockcount`                |
+| `getblockhash`                 |
+| `getblockheader`               |
+| `getblockheadercount`          |
+| `getblocksysfee`               |
+| `getcommittee`                 |
+| `getconnectioncount`           |
+| `getcontractstate`             |
+| `getnativecontracts`           |
+| `getnep11balances`             |
+| `getnep11properties`           |
+| `getnep11transfers`            |
+| `getnep17balances`             |
+| `getnep17transfers`            |
+| `getnextblockvalidators`       |
+| `getpeers`                     |
+| `getproof`                     |
+| `getrawmempool`                |
+| `getrawtransaction`            |
+| `getstate`                     |
+| `getstateheight`               |
+| `getstateroot`                 |
+| `getstorage`                   |
+| `gettransactionheight`         |
+| `getunclaimedgas`              |
+| `getversion`                   |
+| `invokecontractverify`         |
+| `invokecontractverifyhistoric` |
+| `invokefunction`               |
+| `invokefunctionhistoric`       |
+| `invokescript`                 |
+| `invokescripthistoric`         |
+| `sendrawtransaction`           |
+| `submitblock`                  |
+| `submitoracleresponse`         |
+| `submitnotaryrequest`          |
+| `validateaddress`              |
+| `verifyproof`                  |
 
 #### Implementation notices
 
@@ -169,6 +172,19 @@ This method returns cumulative system fee for all transactions included in a
 block. It can be removed in future versions, but at the moment you can use it
 to see how much GAS is burned with particular block (because system fees are
 burned).
+
+#### `invokecontractverifyhistoric`, `invokefunctionhistoric` and `invokescripthistoric` calls
+
+These methods provide the ability of *historical* calls and accept block hash or
+index as the first parameter, stateroot hash as the second parameter and the list
+of parameters that is the same as of `invokecontractverify`, `invokefunction` and
+`invokescript` correspondingly. The historical call assumes that the contracts'
+storage state has all its values got from MPT with the specified root and the
+transaction will be invoked using interop context with block of the specified
+height. This will allow to perform test invocation using the specified past chain
+state.
+
+These methods may be useful for debugging purposes.
 
 #### `submitnotaryrequest` call
 

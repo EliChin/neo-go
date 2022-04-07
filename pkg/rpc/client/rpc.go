@@ -588,6 +588,14 @@ func (c *Client) InvokeScript(script []byte, signers []transaction.Signer) (*res
 	return c.invokeSomething("invokescript", p, signers)
 }
 
+// InvokeScriptHistoric returns the result of the given script after running it
+// true the VM using the provided chain state (height+stateroot).
+// NOTE: This is a test invoke and will not affect the blockchain.
+func (c *Client) InvokeScriptHistoric(height uint32, stateroot util.Uint256, script []byte, signers []transaction.Signer) (*result.Invoke, error) {
+	var p = request.NewRawParams(height, stateroot.StringLE(), script)
+	return c.invokeSomething("invokescripthistoric", p, signers)
+}
+
 // InvokeFunction returns the results after calling the smart contract scripthash
 // with the given operation and parameters.
 // NOTE: this is test invoke and will not affect the blockchain.
@@ -596,12 +604,28 @@ func (c *Client) InvokeFunction(contract util.Uint160, operation string, params 
 	return c.invokeSomething("invokefunction", p, signers)
 }
 
+// InvokeFunctionHistoric returns the results after calling the smart contract scripthash
+// with the given operation and parameters.
+// NOTE: this is test invoke and will not affect the blockchain.
+func (c *Client) InvokeFunctionHistoric(height uint32, stateroot util.Uint256, contract util.Uint160, operation string, params []smartcontract.Parameter, signers []transaction.Signer) (*result.Invoke, error) {
+	var p = request.NewRawParams(height, stateroot.StringLE(), contract.StringLE(), operation, params)
+	return c.invokeSomething("invokefunctionhistoric", p, signers)
+}
+
 // InvokeContractVerify returns the results after calling `verify` method of the smart contract
 // with the given parameters under verification trigger type.
 // NOTE: this is test invoke and will not affect the blockchain.
 func (c *Client) InvokeContractVerify(contract util.Uint160, params []smartcontract.Parameter, signers []transaction.Signer, witnesses ...transaction.Witness) (*result.Invoke, error) {
 	var p = request.NewRawParams(contract.StringLE(), params)
 	return c.invokeSomething("invokecontractverify", p, signers, witnesses...)
+}
+
+// InvokeContractVerifyHistoric returns the results after calling `verify` method
+// of the smart contract with the given parameters under verification trigger type.
+// NOTE: this is test invoke and will not affect the blockchain.
+func (c *Client) InvokeContractVerifyHistoric(height uint32, stateroot util.Uint256, contract util.Uint160, params []smartcontract.Parameter, signers []transaction.Signer, witnesses ...transaction.Witness) (*result.Invoke, error) {
+	var p = request.NewRawParams(height, stateroot.StringLE(), contract.StringLE(), params)
+	return c.invokeSomething("invokecontractverifyhistoric", p, signers, witnesses...)
 }
 
 // invokeSomething is an inner wrapper for Invoke* functions.
