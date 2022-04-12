@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/nspcc-dev/neo-go/internal/testchain"
+	"github.com/nspcc-dev/neo-go/pkg/core"
 	"github.com/nspcc-dev/neo-go/pkg/core/fee"
 	"github.com/nspcc-dev/neo-go/pkg/core/native/nativenames"
 	"github.com/nspcc-dev/neo-go/pkg/core/transaction"
@@ -783,7 +784,7 @@ func TestInvokeVerify(t *testing.T) {
 		require.NoError(t, err)
 		_, err = c.InvokeContractVerifyHistoric(h, sr.Root, contract, smartcontract.Params{}, []transaction.Signer{{Account: testchain.PrivateKeyByID(0).PublicKey().GetScriptHash()}})
 		require.Error(t, err)
-		// TODO: check that error is `ErrUnknownVerificationContract`
+		require.ErrorIs(t, err, core.ErrUnknownVerificationContract) // contract wasn't deployed yet
 	})
 
 	t.Run("positive, with signer and witness", func(t *testing.T) {

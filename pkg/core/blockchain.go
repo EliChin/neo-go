@@ -1451,12 +1451,12 @@ func (bc *Blockchain) ForEachNEP11Transfer(acc util.Uint160, newestTimestamp uin
 
 // GetNEP17Contracts returns the list of deployed NEP-17 contracts.
 func (bc *Blockchain) GetNEP17Contracts() []util.Uint160 {
-	return bc.contracts.Management.GetNEP17Contracts()
+	return bc.contracts.Management.GetNEP17Contracts(bc.dao)
 }
 
 // GetNEP11Contracts returns the list of deployed NEP-11 contracts.
 func (bc *Blockchain) GetNEP11Contracts() []util.Uint160 {
-	return bc.contracts.Management.GetNEP11Contracts()
+	return bc.contracts.Management.GetNEP11Contracts(bc.dao)
 }
 
 // GetTokenLastUpdated returns a set of contract ids with the corresponding last updated
@@ -2333,7 +2333,9 @@ func (bc *Blockchain) ManagementContractHash() util.Uint160 {
 }
 
 func (bc *Blockchain) newInteropContext(trigger trigger.Type, d *dao.Simple, block *block.Block, tx *transaction.Transaction) *interop.Context {
-	ic := interop.NewContext(trigger, bc, d, bc.contracts.Management.GetContract, bc.contracts.Contracts, block, tx, bc.log)
+	ic := interop.NewContext(trigger, bc, d, bc.contracts.Management.GetContract, func(d *dao.Simple) {
+		bc.contracts.Management.InitializeCache(d)
+	}, bc.contracts.Contracts, block, tx, bc.log)
 	ic.Functions = systemInterops
 	switch {
 	case tx != nil:

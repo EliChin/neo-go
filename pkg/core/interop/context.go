@@ -68,10 +68,16 @@ type Context struct {
 
 // NewContext returns new interop context.
 func NewContext(trigger trigger.Type, bc Ledger, d *dao.Simple,
-	getContract func(*dao.Simple, util.Uint160) (*state.Contract, error), natives []Contract,
+	getContract func(*dao.Simple, util.Uint160) (*state.Contract, error),
+	initializeNativeCache func(d *dao.Simple),
+	natives []Contract,
 	block *block.Block, tx *transaction.Transaction, log *zap.Logger) *Context {
 	baseExecFee := int64(DefaultBaseExecFee)
 	dao := d.GetPrivate()
+
+	if initializeNativeCache != nil {
+		initializeNativeCache(dao)
+	}
 
 	if bc != nil && (block == nil || block.Index != 0) {
 		baseExecFee = bc.GetBaseExecFee()
